@@ -10,6 +10,10 @@
 		99FC905A24E2E71700EFF195 /* WeatherApi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99FC905024E2E71700EFF195 /* WeatherApi.framework */; };
 		99FC905F24E2E71700EFF195 /* WeatherApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FC905E24E2E71700EFF195 /* WeatherApiTests.swift */; };
 		99FC906124E2E71700EFF195 /* WeatherApi.h in Headers */ = {isa = PBXBuildFile; fileRef = 99FC905324E2E71700EFF195 /* WeatherApi.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		99FC906B24E2EE4100EFF195 /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FC906A24E2EE4100EFF195 /* WeatherService.swift */; };
+		99FC906F24E2EECA00EFF195 /* WeatherEnvlope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FC906E24E2EECA00EFF195 /* WeatherEnvlope.swift */; };
+		99FC907124E2EF0200EFF195 /* WeatherError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FC907024E2EF0200EFF195 /* WeatherError.swift */; };
+		99FC907324E2F1D100EFF195 /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FC907224E2F1D100EFF195 /* WeatherData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +33,10 @@
 		99FC905924E2E71700EFF195 /* WeatherApiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherApiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		99FC905E24E2E71700EFF195 /* WeatherApiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherApiTests.swift; sourceTree = "<group>"; };
 		99FC906024E2E71700EFF195 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		99FC906A24E2EE4100EFF195 /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
+		99FC906E24E2EECA00EFF195 /* WeatherEnvlope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherEnvlope.swift; sourceTree = "<group>"; };
+		99FC907024E2EF0200EFF195 /* WeatherError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherError.swift; sourceTree = "<group>"; };
+		99FC907224E2F1D100EFF195 /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +81,10 @@
 			children = (
 				99FC905324E2E71700EFF195 /* WeatherApi.h */,
 				99FC905424E2E71700EFF195 /* Info.plist */,
+				99FC906A24E2EE4100EFF195 /* WeatherService.swift */,
+				99FC906E24E2EECA00EFF195 /* WeatherEnvlope.swift */,
+				99FC907024E2EF0200EFF195 /* WeatherError.swift */,
+				99FC907224E2F1D100EFF195 /* WeatherData.swift */,
 			);
 			path = WeatherApi;
 			sourceTree = "<group>";
@@ -148,6 +160,7 @@
 				TargetAttributes = {
 					99FC904F24E2E71700EFF195 = {
 						CreatedOnToolsVersion = 11.6;
+						LastSwiftMigration = 1160;
 					};
 					99FC905824E2E71700EFF195 = {
 						CreatedOnToolsVersion = 11.6;
@@ -195,6 +208,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99FC906F24E2EECA00EFF195 /* WeatherEnvlope.swift in Sources */,
+				99FC907124E2EF0200EFF195 /* WeatherError.swift in Sources */,
+				99FC907324E2F1D100EFF195 /* WeatherData.swift in Sources */,
+				99FC906B24E2EE4100EFF195 /* WeatherService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +357,7 @@
 		99FC906524E2E71700EFF195 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = MRV7A6DFL3;
@@ -356,7 +374,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.djabir.WeatherApi;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -364,6 +383,7 @@
 		99FC906624E2E71700EFF195 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = MRV7A6DFL3;
@@ -380,7 +400,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.djabir.WeatherApi;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -388,6 +408,7 @@
 		99FC906824E2E71700EFF195 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MRV7A6DFL3;
 				INFOPLIST_FILE = WeatherApiTests/Info.plist;
@@ -406,6 +427,7 @@
 		99FC906924E2E71700EFF195 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MRV7A6DFL3;
 				INFOPLIST_FILE = WeatherApiTests/Info.plist;
