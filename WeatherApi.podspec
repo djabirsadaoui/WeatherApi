@@ -15,6 +15,7 @@ Pod::Spec.new do |s|
  
   s.ios.deployment_target = '11.0'
   s.swift_version = '4.0'
-  s.source_files = 'WeatherApi/*.swift'
+  s.source_files = 'WeatherApi/*/*.{swift,h,xcdatamodeld}'
+  s.resources = 'WeatherApi/**/*.xcdatamodeld'
  
 end

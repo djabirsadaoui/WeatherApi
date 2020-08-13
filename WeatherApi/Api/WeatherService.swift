@@ -10,24 +10,36 @@ import Foundation
 
 enum WeatherParameter: String {
     case city = "q"
+    case lat
+    case lon
     case apiKey = "appid"
-    case zip = "zip"
-    case id = "id"
+    case zip
+    case id
+    case exclude
+    case units
+    case lang
+}
+
+enum OptionParameter: String {
+    case current
+    case minutely
+    case hourly
+    case daily
 }
 
 enum WeatherEndPoint: String {
-    case current = "/weather"
-    case hourlyForcast = "forecast/hourly"
-    case oneCall = "onecall"
-    case dailyForcast = "forecast/daily"
+    case onecall
+    case current
+    case forecast
+}
+enum Units: String {
+    case imperial
+    case metric
 }
 
-protocol WeatherServiceProtocol {
-    func getCurrentWeather(city: String, completion: @escaping (Result<Weather, WeatherError>) -> Void)
-}
 
-class WeatherService: WeatherServiceProtocol {
-    
+open class WeatherService {
+    public static let shared = WeatherService()
     static let session: URLSession = {
         let sessionConfig = URLSessionConfiguration.default
         sessionConfig.timeoutIntervalForRequest = 30.0
@@ -84,14 +96,29 @@ class WeatherService: WeatherServiceProtocol {
         taskData.resume()
     }
     
-    func getCurrentWeather(city: String, completion: @escaping (Result<Weather, WeatherError>) -> Void) {
+    public func getCurrentWeather(city: String, completion: @escaping (Result<[Weather], WeatherError>) -> Void) {
         // parameters
         let query : [WeatherParameter: String] = [.apiKey: WeatherService.APIKey, .city: city]
        
-        WeatherService.request(endpoint: .current, query: query, contentIdentifier: "weather") { (result: Result<Weather, WeatherError>) in
+        WeatherService.request(endpoint: .current, query: query, contentIdentifier: "weather") { (result: Result<[Weather], WeatherError>) in
             DispatchQueue.main.async {
                 completion(result)
             }
         }
+    }
+
+    public func getCurrentAndForcastWeather(lat: String, lon: String, completion: @escaping (Result<Current, WeatherError>)-> Void) {
+        let query : [WeatherParameter: String] = [.apiKey: WeatherService.APIKey, .lat: lat, .lon: lon, .units: Units.metric.rawValue, .exclude:"\(OptionParameter.minutely),\(OptionParameter.hourly)", .lang: Locale.preferredLocale.languageCode ?? "en" ]
+        WeatherService.request(endpoint: .onecall, query: query, contentIdentifier: "current") { (result: Result<Current, WeatherError>) in
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+    }
+    private func getPreferredLocale() -> Locale {
+        guard let preferredIdentifier = Locale.preferredLanguages.first else {
+            return Locale.current
+        }
+        return Locale(identifier: preferredIdentifier)
     }
 }

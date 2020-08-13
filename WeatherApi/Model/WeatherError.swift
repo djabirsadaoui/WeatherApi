@@ -8,13 +8,14 @@
 
 import Foundation
 
-enum WeatherError: Error {
+public enum WeatherError: Error {
     case invalidURL(String)
     case invalidJSON(String)
     case invalidResponse
     case invalidDecoderConfiguration
     case networkError(String)
     case invalideRequest
+    case saveError
     
     func map() -> String {
         switch self {
@@ -30,6 +31,8 @@ enum WeatherError: Error {
             return "invalideRequest"
         case .invalidResponse:
             return "invalidResponse"
+        case .saveError:
+            return "saveError"
         }
     }
 }
