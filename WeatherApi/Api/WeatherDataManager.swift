@@ -34,15 +34,14 @@ open class WeatherDataManager {
     }()
     
     // MARK: Functions
-    
-    /// This function allows to save city entity in data base
+    /// This function allows to create a city entity in data base
     /// - Parameters:
     ///   - name: name of city
     ///   - lat: latitude
     ///   - lon: longitude
-    ///   - completion: closure that returns an error if saving the city is unsuccessful. otherwise it returns the saved city object
-    public func createCity(name: String, lat: Double, lon: Double, completion: @escaping(City?, WeatherError?) -> Void) {
-        let city = City(context: viewContext)
+    ///   - completion: closure which takes as parameter two  objects : CityEntity?, WeatherError?
+    public func createCity(name: String, lat: Double, lon: Double, completion: @escaping(CityEntity?, WeatherError?) -> Void) {
+        let city = CityEntity(context: viewContext)
         city.cityName = name
         city.lat = lat
         city.lon = lon
@@ -56,12 +55,20 @@ open class WeatherDataManager {
     
     /// search  all the cities saved previously
     /// - Parameter completion: returns the cities found,  otherwise it returns an empty list
-    public func fetchCities(completion: @escaping([City]?)-> Void) {
-        let request: NSFetchRequest<City> = City.fetchRequest()
+    public func loadCities(completion: @escaping([CityEntity]?)-> Void) {
+        let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
         guard let cities = try? viewContext.fetch(request) else {
             completion([])
             return
         }
         completion(cities)
+    }
+    func saveContext() {
+        guard viewContext.hasChanges  else { return }
+        do {
+            try viewContext.save()
+        } catch let error as NSError {
+            print("Unresolved error \(error), \(error.userInfo)")
+        }
     }
 }

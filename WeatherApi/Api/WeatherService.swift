@@ -8,70 +8,69 @@
 
 import Foundation
 
-enum WeatherParameter: String {
-    case city = "q"
-    case lat
-    case lon
-    case apiKey = "appid"
-    case zip
-    case id
-    case exclude
-    case units
-    case lang
-}
 
-enum OptionParameter: String {
-    case current
-    case minutely
-    case hourly
-    case daily
-}
-
-enum WeatherEndPoint: String {
-    case onecall
-    case current
-    case forecast
-}
-enum Units: String {
-    case imperial
-    case metric
-}
 
 
 open class WeatherService {
+    // MARK: Vars
     public static let shared = WeatherService()
-    static let session: URLSession = {
-        let sessionConfig = URLSessionConfiguration.default
-        sessionConfig.timeoutIntervalForRequest = 30.0
-        sessionConfig.timeoutIntervalForResource = 60.0
-        let session = URLSession(configuration: sessionConfig)
-        return session
-    }()
-    static let API = "http://api.openweathermap.org/data/2.5"
-    private static let APIKey = "b63690dce091716867f2062f32b78ae0"
+    var dataManager: WeatherDataManager = WeatherDataManager.shared
     
-    
-    static func jsonDecoder(contentIdentifier: String) -> JSONDecoder {
-        let decoder = JSONDecoder()
-        decoder.userInfo[.contentIdentifier] = contentIdentifier
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
+    // MARK: API functions
+    /// This method retrieves the weather from the server and saves it locally. in the event of no connection, it returns the local weather if present, otherwise an internet error
+    /// - Parameters:
+    ///   - city: city entity
+    ///   - completion: closure which takes as parameter an object of type Result <OpenWeatherEntity, WeatherError>
+    public func getCurrentAndForcastWeather(city: CityEntity, completion: @escaping (Result<OpenWeatherEntity, WeatherError>)-> Void) {
+        if InternetManager.isConnectedToNetwork() {
+            self.fetchCurrentAndForcastWeather(city: city) { (result) in
+                completion(result)
+            }
+        } else if let openWeather = city.openWeather {
+            completion(Result.success(openWeather))
+        } else {
+            completion(Result.failure(.networkError("Missing connection")))
+        }
     }
     
-    static func request<T: Decodable>(endpoint: WeatherEndPoint, query: [WeatherParameter: String] = [:], contentIdentifier: String, completion: @escaping (Result<T,WeatherError>) -> Void)  {
-        guard let url = URL(string: API)?.appendingPathComponent(endpoint.rawValue),
+    
+    ///This method allows you to retrieve the weather for today and the weather forecast for the next few days
+    /// - Parameters:
+    ///   - city: city entity
+    ///   - completion: closure which takes as parameter an object of type Result <OpenWeatherEntity, WeatherError>
+    private func fetchCurrentAndForcastWeather(city: CityEntity, completion: @escaping (Result<OpenWeatherEntity, WeatherError>)-> Void) {
+        let params : [WeatherConfig.WeatherParameter: String] = [.apiKey: WeatherConfig.NetworkConfig.APIKey, .lat: String(city.lat), .lon: String(city.lon), .units: WeatherConfig.Units.metric.rawValue, .exclude: WeatherConfig.OptionParameter.minutely.rawValue, .lang: Locale.preferredLocale.languageCode ?? "en" ]
+        self.request(endpoint: .onecall, params: params) { [weak self](result: Result<OpenWeatherEntity, WeatherError>) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let openWeather):
+                    city.openWeather = openWeather
+                    self?.dataManager.saveContext()
+                default: break
+                }
+                completion(result)
+            }
+        }
+    }
+    ///A private method that allows you to build a query and make a web service call
+    /// - Parameters:
+    ///   - endpoint: end point
+    ///   - params: the parameters of the request
+    ///   - completion: closure which takes as parameter an object of type Result <OpenWeatherEntity, WeatherError>
+    private  func request<T: Decodable>(endpoint: WeatherConfig.WeatherEndPoint, params: [WeatherConfig.WeatherParameter: String] = [:], completion: @escaping (Result<T,WeatherError>) -> Void)  {
+        guard let url = URL(string: WeatherConfig.NetworkConfig.baseURL)?.appendingPathComponent(endpoint.rawValue),
             var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                 completion(.failure(.invalidURL(endpoint.rawValue)))
                 return
         }
-        components.queryItems = query.compactMap { (key, value) in
+        components.queryItems = params.compactMap { (key, value) in
             return URLQueryItem(name: key.rawValue, value: value)
         }
         guard let finalURL = components.url else {
             completion(.failure(.invalidURL(endpoint.rawValue)))
             return
         }
-        let taskData = session.dataTask(with: finalURL) { (data, response, error) in
+        let taskData = WeatherConfig.NetworkConfig.session.dataTask(with: finalURL) {(data, response, error) in
             if let error = error {
                 completion(.failure(.networkError(error.localizedDescription)))
                 return
@@ -81,44 +80,24 @@ open class WeatherService {
                 return
             }
             guard let data = data , response.statusCode == 200 else {
-                print("Failure response from Weatherbit: \(response.statusCode)")
+                print("Failure response from openWeather: \(response.statusCode)")
                 completion(.failure(.invalideRequest))
                 return
             }
             do {
-                let decoder = self.jsonDecoder(contentIdentifier: contentIdentifier)
-                let envelope = try decoder.decode(WeatherEnvelope<T>.self, from: data)
-                completion(.success(envelope.content))
+                let decoder = JSONDecoder()
+                guard let contextUserInfoKey = CodingUserInfoKey.context else {
+                    completion(.failure(.invalidDecoderConfiguration))
+                    return
+                }
+                decoder.userInfo[contextUserInfoKey] = WeatherDataManager.shared.viewContext
+                let weather = try decoder.decode(T.self, from: data)
+                
+                completion(Result.success(weather))
             } catch {
                 completion(.failure(.invalidDecoderConfiguration))
             }
         }
         taskData.resume()
-    }
-    
-    public func getCurrentWeather(city: String, completion: @escaping (Result<[Weather], WeatherError>) -> Void) {
-        // parameters
-        let query : [WeatherParameter: String] = [.apiKey: WeatherService.APIKey, .city: city]
-       
-        WeatherService.request(endpoint: .current, query: query, contentIdentifier: "weather") { (result: Result<[Weather], WeatherError>) in
-            DispatchQueue.main.async {
-                completion(result)
-            }
-        }
-    }
-
-    public func getCurrentAndForcastWeather(lat: String, lon: String, completion: @escaping (Result<Current, WeatherError>)-> Void) {
-        let query : [WeatherParameter: String] = [.apiKey: WeatherService.APIKey, .lat: lat, .lon: lon, .units: Units.metric.rawValue, .exclude:"\(OptionParameter.minutely),\(OptionParameter.hourly)", .lang: Locale.preferredLocale.languageCode ?? "en" ]
-        WeatherService.request(endpoint: .onecall, query: query, contentIdentifier: "current") { (result: Result<Current, WeatherError>) in
-            DispatchQueue.main.async {
-                completion(result)
-            }
-        }
-    }
-    private func getPreferredLocale() -> Locale {
-        guard let preferredIdentifier = Locale.preferredLanguages.first else {
-            return Locale.current
-        }
-        return Locale(identifier: preferredIdentifier)
     }
 }
