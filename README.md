@@ -1,5 +1,5 @@
 # WeatherApi
-
+Ce framework permetra de récuprer la météo de 8 jours depuis le serveur OpenWeather et la sauvegarder localement sur le smartphone pour la retourner dans le cas de l'absence d'internet.
 ## 1. Installation: 
 1. Dézippez et placez le framework au même niveau que votre application.
 2. créer un podFile dans votre application: 
