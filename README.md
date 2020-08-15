@@ -2,15 +2,16 @@
 
 ## 1. Installation: 
 1. Dézippez et placez le framework au même niveau que votre application.
-1. créer un podFile dans votre application: 
+2. créer un podFile dans votre application: 
 ```
 pod init
 ```
-2. ouvre votre podFile et ajouter la ligne suivante:
+3. ouvre votre podFile et ajouter la ligne suivante:
 ```
+# Pods for WeatherApplication
 pod 'WeatherApi' , :path=> '../WeatherApi'
 ```
-3. sauvegardez votre fichier, en suite installez le framework:
+4. sauvegardez votre fichier, en suite installez le framework:
 ```
 pod install
 ```
