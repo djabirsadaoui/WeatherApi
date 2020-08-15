@@ -12,12 +12,12 @@ import CoreData
 open class WeatherDataManager {
     // MARK: Vars
     public static let shared = WeatherDataManager()
-    let model: String = "WeatherStore"
+    private let model: String = "WeatherStore"
     var viewContext: NSManagedObjectContext {
         persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return persistentContainer.viewContext
     }
-    lazy var persistentContainer: NSPersistentContainer = {
+    private lazy var persistentContainer: NSPersistentContainer = {
         let messageKitBundle = Bundle(for: type(of: self))
         let modelURL = messageKitBundle.url(forResource: self.model, withExtension: "momd")
         guard let modelUrl = modelURL else  {
