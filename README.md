@@ -1,5 +1,5 @@
 # WeatherApi
-WeatherApi is a simple framework written in swift 4.2 for building meteo applications.
+WeatherApi is a simple framework written in swift 4.2 for building weather applications.
 With WeatherApi: 
 * you can collect weather informations from OpenWeather.
 * you can keep data in smartphone for offline mode.
