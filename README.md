@@ -1,5 +1,5 @@
 # WeatherApi
-## 1. Intriduction:
+## 1. Introduction:
 
 ## 2. Installation: 
 
