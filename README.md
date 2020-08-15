@@ -1,7 +1,7 @@
 # WeatherApi
 
 ## 1. Installation: 
-1. Après avoir téléchargé le framework, dézippez et placez le au même niveau que votre application.
+1. Dézippez et placez le framework au même niveau que votre application.
 1. créer un podFile dans votre application: 
 ```
 pod init
