@@ -1,24 +1,30 @@
 # WeatherApi
-Ce framework permetra de récuprer la météo de 8 jours depuis le serveur OpenWeather et la sauvegarder localement sur le smartphone pour la retourner dans le cas de l'absence d'internet.
+WeatherApi is a simple framework written in swift 4.2 for building meteo applications.
+With WeatherApi: 
+> you can collect weather information from OpenWeather.
+> you can keep data in smartphone for offline mode.
+> you can save a new city.
+> you can load all cities saved
+
 ## 1. Installation: 
-1. Dézippez et placez le framework au même niveau que votre application.
-2. créer un podFile dans votre application: 
+1. Unzip and place the framework at the same level as your application.
+2. create a podFile in your application folder: 
 ```
 pod init
 ```
-3. ouvre votre podFile et ajouter la ligne suivante:
+3. open your podFile and add the following line:
 ```
 # Pods for WeatherApplication
 pod 'WeatherApi' , :path=> '../WeatherApi'
 ```
-4. sauvegardez votre fichier, en suite installez le framework:
+4. save your file and then install the framework:
 ```
 pod install
 ```
-## 2. Diagramme de classe:
+## 2. Class Diagram:
 
 ![image1](./images/class_diagram.png)
 
-## 3. Diagramme de class métier:
+## 3. Business level:
 
 ![image2](./images/business_level.png)
