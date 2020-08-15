@@ -1,10 +1,10 @@
 # WeatherApi
 WeatherApi is a simple framework written in swift 4.2 for building meteo applications.
 With WeatherApi: 
-> you can collect weather information from OpenWeather.
-> you can keep data in smartphone for offline mode.
-> you can save a new city.
-> you can load all cities saved
+* you can collect weather information from OpenWeather.
+* you can keep data in smartphone for offline mode.
+* you can save a new city.
+* you can load all cities saved
 
 ## 1. Installation: 
 1. Unzip and place the framework at the same level as your application.
