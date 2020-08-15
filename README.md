@@ -1,8 +1,12 @@
 # WeatherApi
-Diagramme de classe:
+##1. Intriduction:
 
-![](./images/class_diagram.png)
+##2. Installation: 
 
-La couche métier:
+##3.Diagramme de classe:
 
-![](./images/business_level.png)
+![image1](./images/class_diagram.png)
+
+##4.Diagramme de class métier:
+
+![image2](./images/business_level.png)
