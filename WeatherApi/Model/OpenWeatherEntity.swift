@@ -13,10 +13,14 @@ import CoreData
 
 public class OpenWeatherEntity: NSManagedObject, Decodable {
     public var hourlyArray: [CurrentEntity] {
-        return hourly.toArray()
+        return hourly.toArray().sorted { (current1, current2) -> Bool in
+            return current1.dt < current2.dt
+        }
     }
     public var dailyArray: [DailyEntity] {
-        daily.toArray()
+        daily.toArray().sorted { (daily1, daily2) -> Bool in
+            return daily1.dt < daily2.dt
+        }
     }
     enum CodingKeys: String, CodingKey {
         case lat, lon, timezone
