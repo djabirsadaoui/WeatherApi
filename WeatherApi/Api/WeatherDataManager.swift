@@ -9,15 +9,25 @@
 import Foundation
 import CoreData
 
-open class WeatherDataManager {
+public protocol DataManager {
+    static var shared: DataManager { get }
+    func createCity(name: String, lat: Double, lon: Double, completion: @escaping(CityEntity?, WeatherError?) -> Void)
+    func loadCities(completion: @escaping([CityEntity]?)-> Void)
+    var viewContext: NSManagedObjectContext { get }
+    var persistentContainer: NSPersistentContainer { get set}
+    func saveContext()
+}
+
+open class WeatherDataManager: DataManager {
+
     // MARK: Vars
-    public static let shared = WeatherDataManager()
-    private let model: String = "WeatherStore"
-    var viewContext: NSManagedObjectContext {
+    public static let shared: DataManager = WeatherDataManager()
+    let model: String = "WeatherStore"
+    public var viewContext: NSManagedObjectContext {
         persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return persistentContainer.viewContext
     }
-    private lazy var persistentContainer: NSPersistentContainer = {
+    public lazy var persistentContainer: NSPersistentContainer = {
         let messageKitBundle = Bundle(for: type(of: self))
         let modelURL = messageKitBundle.url(forResource: self.model, withExtension: "momd")
         guard let modelUrl = modelURL else  {
@@ -63,7 +73,7 @@ open class WeatherDataManager {
         }
         completion(cities)
     }
-    func saveContext() {
+    public func saveContext() {
         guard viewContext.hasChanges  else { return }
         do {
             try viewContext.save()
@@ -72,3 +82,4 @@ open class WeatherDataManager {
         }
     }
 }
+

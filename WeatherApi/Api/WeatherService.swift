@@ -14,7 +14,7 @@ import Foundation
 open class WeatherService {
     // MARK: Vars
     public static let shared = WeatherService()
-    var dataManager: WeatherDataManager = WeatherDataManager.shared
+    var dataManager: DataManager = WeatherDataManager.shared
     
     // MARK: API functions
     /// This method retrieves the weather from the server and saves it locally. in the event of no connection, it returns the local weather if present, otherwise an internet error
@@ -70,7 +70,7 @@ open class WeatherService {
             completion(.failure(.invalidURL(endpoint.rawValue)))
             return
         }
-        let taskData = WeatherConfig.NetworkConfig.session.dataTask(with: finalURL) {(data, response, error) in
+        let taskData = WeatherConfig.NetworkConfig.session.dataTask(with: finalURL) {[weak self](data, response, error) in
             if let error = error {
                 completion(.failure(.networkError(error.localizedDescription)))
                 return
@@ -90,7 +90,7 @@ open class WeatherService {
                     completion(.failure(.invalidDecoderConfiguration))
                     return
                 }
-                decoder.userInfo[contextUserInfoKey] = WeatherDataManager.shared.viewContext
+                decoder.userInfo[contextUserInfoKey] = self?.dataManager.viewContext
                 let weather = try decoder.decode(T.self, from: data)
                 
                 completion(Result.success(weather))
