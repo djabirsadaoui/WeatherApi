@@ -11,15 +11,15 @@ import CoreData
 
 public protocol DataManager {
     static var shared: DataManager { get }
-    func createCity(name: String, lat: Double, lon: Double, completion: @escaping(CityEntity?, WeatherError?) -> Void)
-    func loadCities(completion: @escaping([CityEntity]?)-> Void)
     var viewContext: NSManagedObjectContext { get }
     var persistentContainer: NSPersistentContainer { get set}
+    func createCity(name: String, lat: Double, lon: Double, completion: @escaping(CityEntity?, WeatherError?) -> Void)
+    func loadCities(completion: @escaping([CityEntity]?)-> Void)
     func saveContext()
 }
 
 open class WeatherDataManager: DataManager {
-
+    
     // MARK: Vars
     public static let shared: DataManager = WeatherDataManager()
     let model: String = "WeatherStore"
