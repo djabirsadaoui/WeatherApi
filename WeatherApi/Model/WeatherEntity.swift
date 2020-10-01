@@ -11,7 +11,7 @@ import Foundation
 import CoreData
 
 
-public class WeatherEntity: NSManagedObject, Decodable {
+public class WeatherEntity: NSManagedObject, Decodable, Identifiable{
     enum CodingKeys: String, CodingKey {
         case id, main
         case weatherDescription = "description"

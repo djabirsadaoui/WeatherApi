@@ -9,8 +9,20 @@
 import Foundation
 import CoreData
 
-public class CityEntity: NSManagedObject {
+public class CityEntity: NSManagedObject, Identifiable {
+    public var id = UUID()
+}
 
+extension CityEntity {
+    
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<CityEntity> {
+        return NSFetchRequest<CityEntity>(entityName: "CityEntity")
+    }
+ 
+    @NSManaged public var cityName: String?
+    @NSManaged public var lat: Double
+    @NSManaged public var lon: Double
+    @NSManaged public var openWeather: OpenWeatherEntity?
 }
 
 
